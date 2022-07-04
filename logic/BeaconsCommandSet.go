@@ -99,7 +99,7 @@ func (c *BeaconsCommandSet) makeCreateBeaconCommand() ccmd.ICommand {
 		func(ctx context.Context, correlationId string, args *crun.Parameters) (result any, err error) {
 
 			var beacon data1.BeaconV1
-			if _beacon, ok := args.Get("beacon"); ok {
+			if _beacon, ok := args.GetAsObject("beacon"); ok {
 				buf, err := cconv.JsonConverter.ToJson(_beacon)
 				if err != nil {
 					return nil, err
@@ -120,7 +120,7 @@ func (c *BeaconsCommandSet) makeUpdateBeaconCommand() ccmd.ICommand {
 			WithRequiredProperty("beacon", data1.NewBeaconV1Schema()),
 		func(ctx context.Context, correlationId string, args *crun.Parameters) (result any, err error) {
 			var beacon data1.BeaconV1
-			if _beacon, ok := args.Get("beacon"); ok {
+			if _beacon, ok := args.GetAsObject("beacon"); ok {
 				buf, err := cconv.JsonConverter.ToJson(_beacon)
 				if err != nil {
 					return nil, err

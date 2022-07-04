@@ -21,14 +21,19 @@ func NewBeaconsController() *BeaconsController {
 }
 
 func (c *BeaconsController) Configure(ctx context.Context, config *cconf.ConfigParams) {
-	// Todo: Read configuration parameters here...
+	// Read configuration parameters here...
 }
 
 func (c *BeaconsController) SetReferences(ctx context.Context, references cref.IReferences) {
-	p, err := references.GetOneRequired(cref.NewDescriptor("beacons", "persistence", "*", "*", "1.0"))
+	locator := cref.NewDescriptor("beacons", "persistence", "*", "*", "1.0")
+	p, err := references.GetOneRequired(locator)
 	if p != nil && err == nil {
-		c.persistence = p.(persist.IBeaconsPersistence)
+		if _pers, ok := p.(persist.IBeaconsPersistence); ok {
+			c.persistence = _pers
+			return
+		}
 	}
+	panic(cref.NewReferenceError("beacons.controller.SetReferences", locator))
 }
 
 func (c *BeaconsController) GetCommandSet() *ccmd.CommandSet {
@@ -67,8 +72,10 @@ func (c *BeaconsController) CalculatePosition(ctx context.Context, correlationId
 		correlationId,
 		*cdata.NewFilterParamsFromTuples(
 			"site_id", siteId,
-			"udis", udis),
-		*cdata.NewEmptyPagingParams())
+			"udis", udis,
+		),
+		*cdata.NewEmptyPagingParams(),
+	)
 
 	if err != nil || !page.HasData() {
 		return data1.GeoPointV1{}, err
@@ -80,22 +87,21 @@ func (c *BeaconsController) CalculatePosition(ctx context.Context, correlationId
 
 	for _, beacon := range page.Data {
 		if beacon.Center.Type == "Point" {
-			lng += beacon.Center.Coordinates[0][0]
-			lat += beacon.Center.Coordinates[0][1]
+			lng += beacon.Center.Coordinates[0]
+			lat += beacon.Center.Coordinates[1]
 			count += 1
 		}
 	}
 
 	pos := data1.GeoPointV1{
 		Type:        "Point",
-		Coordinates: make([][]float32, 1, 1),
+		Coordinates: make([]float32, 2, 2),
 	}
-	pos.Coordinates[0] = make([]float32, 2, 2)
 
 	if count > 0 {
 		pos.Type = "Point"
-		pos.Coordinates[0][0] = lng / (float32)(count)
-		pos.Coordinates[0][1] = lat / (float32)(count)
+		pos.Coordinates[0] = lng / (float32)(count)
+		pos.Coordinates[1] = lat / (float32)(count)
 	}
 
 	return pos, nil

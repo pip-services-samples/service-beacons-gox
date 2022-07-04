@@ -27,7 +27,7 @@ func newBeaconsControllerTest() *beaconsControllerTest {
 		Type:   data1.AltBeacon,
 		SiteId: "1",
 		Label:  "TestBeacon1",
-		Center: data1.GeoPointV1{Type: "Point", Coordinates: [][]float32{{0.0, 0.0}}},
+		Center: data1.GeoPointV1{Type: "Point", Coordinates: []float32{0.0, 0.0}},
 		Radius: 50,
 	}
 
@@ -37,7 +37,7 @@ func newBeaconsControllerTest() *beaconsControllerTest {
 		Type:   data1.IBeacon,
 		SiteId: "1",
 		Label:  "TestBeacon2",
-		Center: data1.GeoPointV1{Type: "Point", Coordinates: [][]float32{{2.0, 2.0}}},
+		Center: data1.GeoPointV1{Type: "Point", Coordinates: []float32{2.0, 2.0}},
 		Radius: 70,
 	}
 
@@ -165,16 +165,16 @@ func (c *beaconsControllerTest) testCalculatePositions(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEqual(t, data1.GeoPointV1{}, position)
 	assert.Equal(t, "Point", position.Type)
-	assert.Equal(t, (float32)(0.0), position.Coordinates[0][0])
-	assert.Equal(t, (float32)(0.0), position.Coordinates[0][1])
+	assert.Equal(t, (float32)(0.0), position.Coordinates[0])
+	assert.Equal(t, (float32)(0.0), position.Coordinates[1])
 
 	// Calculate position for two beacons
 	position, err = c.controller.CalculatePosition(context.Background(), "", "1", []string{"00001", "00002"})
 	assert.Nil(t, err)
 	assert.NotEqual(t, data1.GeoPointV1{}, position)
 	assert.Equal(t, "Point", position.Type)
-	assert.Equal(t, (float32)(1.0), position.Coordinates[0][0])
-	assert.Equal(t, (float32)(1.0), position.Coordinates[0][1])
+	assert.Equal(t, (float32)(1.0), position.Coordinates[0])
+	assert.Equal(t, (float32)(1.0), position.Coordinates[1])
 }
 
 func TestBeaconsController(t *testing.T) {

@@ -27,11 +27,16 @@ func (c *BeaconsMemoryPersistence) composeFilter(filter cdata.FilterParams) func
 	siteId := filter.GetAsString("site_id")
 	label := filter.GetAsString("label")
 	udi := filter.GetAsString("udi")
-	udis := filter.GetAsString("udis")
 
 	var udiValues []string
-	if udis != "" {
-		udiValues = strings.Split(udis, ",")
+	if _udis, ok := filter.GetAsObject("udis"); ok {
+		if _val, ok := _udis.([]string); ok {
+			udiValues = _val
+		}
+		if _val, ok := _udis.(string); ok {
+			udiValues = strings.Split(_val, ",")
+		}
+
 	}
 
 	return func(beacon data1.BeaconV1) bool {
@@ -47,7 +52,7 @@ func (c *BeaconsMemoryPersistence) composeFilter(filter cdata.FilterParams) func
 		if udi != "" && beacon.Udi != udi {
 			return false
 		}
-		if len(udiValues) > 0 && strings.Index(udis, beacon.Udi) < 0 {
+		if len(udiValues) > 0 && !ContainsStr(udiValues, beacon.Udi) {
 			return false
 		}
 		return true
@@ -78,4 +83,13 @@ func (c *BeaconsMemoryPersistence) GetOneByUdi(ctx context.Context, correlationI
 	}
 
 	return *item, nil
+}
+
+func ContainsStr(arr []string, substr string) bool {
+	for _, _str := range arr {
+		if _str == substr {
+			return true
+		}
+	}
+	return false
 }

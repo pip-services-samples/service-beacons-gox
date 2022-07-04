@@ -26,7 +26,7 @@ func NewBeaconsPersistenceFixture(persistence persist.IBeaconsPersistence) *Beac
 		Type:   data1.AltBeacon,
 		SiteId: "1",
 		Label:  "TestBeacon1",
-		Center: data1.GeoPointV1{Type: "Point", Coordinates: [][]float32{{0.0, 0.0}}},
+		Center: data1.GeoPointV1{Type: "Point", Coordinates: []float32{0.0, 0.0}},
 		Radius: 50,
 	}
 
@@ -36,7 +36,7 @@ func NewBeaconsPersistenceFixture(persistence persist.IBeaconsPersistence) *Beac
 		Type:   data1.IBeacon,
 		SiteId: "1",
 		Label:  "TestBeacon2",
-		Center: data1.GeoPointV1{Type: "Point", Coordinates: [][]float32{{2.0, 2.0}}},
+		Center: data1.GeoPointV1{Type: "Point", Coordinates: []float32{2.0, 2.0}},
 		Radius: 70,
 	}
 
@@ -46,7 +46,7 @@ func NewBeaconsPersistenceFixture(persistence persist.IBeaconsPersistence) *Beac
 		Type:   data1.AltBeacon,
 		SiteId: "2",
 		Label:  "TestBeacon3",
-		Center: data1.GeoPointV1{Type: "Point", Coordinates: [][]float32{{10.0, 10.0}}},
+		Center: data1.GeoPointV1{Type: "Point", Coordinates: []float32{10.0, 10.0}},
 		Radius: 50,
 	}
 
