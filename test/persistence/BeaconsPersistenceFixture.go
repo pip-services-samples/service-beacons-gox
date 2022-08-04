@@ -131,35 +131,38 @@ func (c *BeaconsPersistenceFixture) TestGetWithFilters(t *testing.T) {
 	// Create items
 	c.testCreateBeacons(t)
 
+	filter := *cdata.NewFilterParamsFromTuples(
+		"id", "1",
+	)
 	// Filter by id
 	page, err := c.persistence.GetPageByFilter(context.Background(), "",
-		*cdata.NewFilterParamsFromTuples(
-			"id", "1",
-		),
+		filter,
 		*cdata.NewEmptyPagingParams())
 	assert.Nil(t, err)
 	assert.True(t, page.HasData())
 	assert.Len(t, page.Data, 1)
 
 	// Filter by udi
+	filter = *cdata.NewFilterParamsFromTuples(
+		"udi", "00002",
+	)
 	page, err = c.persistence.GetPageByFilter(
 		context.Background(),
 		"",
-		*cdata.NewFilterParamsFromTuples(
-			"udi", "00002",
-		),
+		filter,
 		*cdata.NewEmptyPagingParams())
 	assert.Nil(t, err)
 	assert.True(t, page.HasData())
 	assert.Len(t, page.Data, 1)
 
 	// Filter by udis
+	filter = *cdata.NewFilterParamsFromTuples(
+		"udis", "00001,00003",
+	)
 	page, err = c.persistence.GetPageByFilter(
 		context.Background(),
 		"",
-		*cdata.NewFilterParamsFromTuples(
-			"udis", "00001,00003",
-		),
+		filter,
 		*cdata.NewEmptyPagingParams())
 
 	assert.Nil(t, err)
@@ -167,12 +170,13 @@ func (c *BeaconsPersistenceFixture) TestGetWithFilters(t *testing.T) {
 	assert.Len(t, page.Data, 2)
 
 	// Filter by site_id
+	filter = *cdata.NewFilterParamsFromTuples(
+		"site_id", "1",
+	)
 	page, err = c.persistence.GetPageByFilter(
 		context.Background(),
 		"",
-		*cdata.NewFilterParamsFromTuples(
-			"site_id", "1",
-		),
+		filter,
 		*cdata.NewEmptyPagingParams())
 
 	assert.Nil(t, err)

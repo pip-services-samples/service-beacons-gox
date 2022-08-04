@@ -18,10 +18,12 @@ func NewBeaconsServiceFactory() *BeaconsServiceFactory {
 	}
 
 	memoryPersistenceDescriptor := cref.NewDescriptor("beacons", "persistence", "memory", "*", "1.0")
+	postgresPersistenceDescriptor := cref.NewDescriptor("beacons", "persistence", "postgres", "*", "1.0")
 	filePersistenceDescriptor := cref.NewDescriptor("beacons", "persistence", "file", "*", "1.0")
 	controllerDescriptor := cref.NewDescriptor("beacons", "controller", "default", "*", "1.0")
 	httpServiceV1Descriptor := cref.NewDescriptor("beacons", "service", "http", "*", "1.0")
 
+	c.RegisterType(postgresPersistenceDescriptor, persist.NewBeaconsPostgresPersistence)
 	c.RegisterType(memoryPersistenceDescriptor, persist.NewBeaconsMemoryPersistence)
 	c.RegisterType(filePersistenceDescriptor, persist.NewBeaconsFilePersistence)
 	c.RegisterType(controllerDescriptor, logic.NewBeaconsController)
