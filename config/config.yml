@@ -14,10 +14,10 @@
 # Performance counters that post values to log
 - descriptor: "pip-services:counters:log:default:1.0"
 
-{{#unless FILE_ENABLED}}{{#unless POSTGRES_ENABLED}}
+{{#unless FILE_ENABLED}}{{#unless POSTGRES_ENABLED}}{{#unless MONGO_ENABLED}}
 # Memory persistence
 - descriptor: "beacons:persistence:memory:default:1.0"
-{{/unless}}{{/unless}}
+{{/unless}}{{/unless}}{{/unless}}
 
 {{#if FILE_ENABLED}}
 # File persistence
@@ -36,6 +36,16 @@
   credential:
     username: {{POSTGRES_USER}}{{#unless POSTGRES_USER}}"postgres"{{/unless}}
     password: {{POSTGRES_PASSWORD}}{{#unless POSTGRES_PASSWORD}}"postgres#"{{/unless}}
+{{/if}}
+
+{{#if MONGO_ENABLED}}
+# MongoDb persistence
+- descriptor: "beacons:persistence:mongodb:default:1.0"
+  connection:
+    uri: {{MONGO_SERVICE_URI}}
+    host: {{MONGO_SERVICE_HOST}}{{#unless MONGO_SERVICE_HOST}}"localhost"{{/unless}}
+    port: {{MONGO_SERVICE_PORT}}{{#unless MONGO_SERVICE_PORT}}27017{{/unless}}
+    database: {{MONGO_DB}}{{#unless MONGO_DB}}"test"{{/unless}}
 {{/if}}
 
 # Controller
